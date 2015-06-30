@@ -16,7 +16,6 @@ defmodule MyApp.Somemodule do
  					   key: Application.get_env(:my_app, :easypost_key)
 
   def verify_user_address(user) do
-  	//where user.address is map containing required fields
     case verify_address(user.address) do
       {:ok, response} ->
         response
