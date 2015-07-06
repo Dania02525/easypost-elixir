@@ -1,0 +1,7 @@
+# Mix artifacts
+/_build
+/deps
+/*.ez
+
+#configs
+/config
