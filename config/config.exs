@@ -21,4 +21,4 @@ use Mix.Config
 # import_config "#{Mix.env}.exs"
 config :my_app, easypost_endpoint: "https://api.easypost.com/v2/",
    easypost_key: "#############",
-   easypost_test_key: "############"
+   easypost_test_key: "##############"

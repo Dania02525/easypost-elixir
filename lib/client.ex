@@ -38,27 +38,7 @@ defmodule Easypost.Client do
   	request(:post, url(conf[:endpoint], "/addresses"), conf[:key], [], ctype, body)
   end
 
-  def verify_address(conf, address) do
-    body = %{
-      "name" => Dict.get(address, :name, ""),
-      "company" => Dict.get(address, :company, ""),
-      "street1" => Dict.fetch!(address, :street1),
-      "street2" => Dict.get(address, :street2, ""),
-      "city" => Dict.fetch!(address, :city),
-      "state" => Dict.fetch!(address, :state),
-      "zip" => Dict.fetch!(address, :zip),
-      "country" => Dict.get(address, :country, "US"),
-      "email" => Dict.get(address, :email, "")
-    }
-      |> Enum.map(fn({k, v}) -> {"address[" <> k <> "]", v} end)
-      |> URI.encode_query
-
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:get, url(conf[:endpoint], "/addresses/create_and_verify?" <> body ), conf[:key], [], ctype, body)
-  end
-
-  def create_shipment(conf, from, to, parcel) do
+  def quick_create_shipment(conf, from, to, parcel) do
     to_address = %{
       "name" => Dict.get(to, :name, ""),
       "company" => Dict.get(to, :company, ""),
