@@ -33,8 +33,8 @@ defmodule Easypost.Client do
       def track(tracking) do
         unquote(__MODULE__).track(conf(), tracking)
       end
-      def add_user(user) do
-        unquote(__MODULE__).add_user(conf(), user)
+      def create_user(user) do
+        unquote(__MODULE__).create_user(conf(), user)
       end
       def get_child_api_keys() do
         unquote(__MODULE__).get_child_api_keys(conf())
@@ -55,6 +55,13 @@ defmodule Easypost.Client do
   	request(:post, url(conf[:endpoint], "/addresses"), conf[:key], [], ctype, body)
   end
 
+  def create_parcel(conf, parcel) do  
+    body = encode(parcel)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/parcels"), conf[:key], [], ctype, body)
+  end
+
   def create_shipment(conf, shipment) do
     body = encode(shipment)
     ctype = 'application/x-www-form-urlencoded'
@@ -62,11 +69,81 @@ defmodule Easypost.Client do
     request(:post, url(conf[:endpoint], "/shipments"), conf[:key], [], ctype, body)
   end
 
+  def create_customs_forms(conf, customs_info) do
+    body = encode(customs_info)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/customs_infos"), conf[:key], [], ctype, body)
+  end
+
+  def create_pickup(conf, pickup) do
+    body = encode(pickup)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/pickups"), conf[:key], [], ctype, body)
+  end
+
+  def create_user(conf, user) do
+    body = encode(user)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/users"), conf[:key], [], ctype, body)
+  end
+
+  def cancel_pickup(conf, pickup_id) do
+    body = {}
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/pickups/" <> pickup_id <> "/cancel"), conf[:key], [], ctype, body)
+  end
+
+  def buy_pickup(conf, pickup_id, pickup) do
+    body = encode(pickup)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/pickups/" <> pickup_id <> "/buy"), conf[:key], [], ctype, body)
+  end
+
+  def track(conf, tracking) do
+    body = encode(tracking)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/trackers"), conf[:key], [], ctype, body)
+  end
+
+  def add_carrier_account(conf, carrier) do
+    body = encode(carrier)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/carrier_accounts"), conf[:key], [], ctype, body)
+  end
+
+  def refund_usps_label(conf, shipment_id) do
+    body = {}
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body)
+  end
+
+  def insure_shipment(conf, shipment_id, insurance) do
+    body = encode(insurance)
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/insure"), conf[:key], [], ctype, body)
+  end
+
   def buy_shipment(conf, shipment_id, rate) do
     body = encode(rate)
     ctype = 'application/x-www-form-urlencoded'
 
     request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/buy"), conf[:key], [], ctype, body)
+  end
+
+  def get_child_api_keys(conf) do
+    body = {}
+    ctype = 'application/x-www-form-urlencoded'
+
+    request(:get, url(conf[:endpoint], "/api_keys"), conf[:key], [], ctype, body)
   end
 
   ##Utilities

@@ -25,7 +25,7 @@ defmodule Easypost.Mixfile do
   end
 
   defp deps do
-    [{:exvcr, "~> 0.4.0", only: [:test]},
+    [
     {:poison, "~> 1.4.0"}
     ]
   end
