@@ -17,7 +17,7 @@ defmodule EasypostTest do
   	  zip: "94105",
   	}
 
-  	{:ok, response} = Easypost.Client.add_address(config, address)
+  	{:ok, response} = Easypost.Client.create_address(config, address)
 
   	assert Dict.has_key?(response, "id")
   end
@@ -31,7 +31,7 @@ defmodule EasypostTest do
       weight: "65.9",
     }
 
-    {:ok, response} = Easypost.Client.add_parcel(config, parcel)
+    {:ok, response} = Easypost.Client.create_parcel(config, parcel)
 
     assert Dict.has_key?(response, "id")
   end
@@ -41,11 +41,9 @@ defmodule EasypostTest do
     insurance = %{
       amount: "888.50",
     }
-    shipment = %{
-      id: "shp_vN9h7XLn",
-    }
+    shipment_id = "shp_vN9h7XLn",
 
-    {:ok, response} = Easypost.Client.add_parcel(config, insurance, shipment)
+    {:ok, response} = Easypost.Client.insure_shipment(config, shipment_id, insurance)
 
     assert Dict.has_key?(response, "insurance")
   end
@@ -61,7 +59,7 @@ defmodule EasypostTest do
       ]
     }
 
-    {:ok, response} = Easypost.Client.add_parcel(config, customs_info)
+    {:ok, response} = Easypost.Client.create_customs_form(config, customs_info)
 
     assert Dict.has_key?(response, "id")
   end
@@ -98,27 +96,29 @@ defmodule EasypostTest do
   test "shipping to valid address without address or parcel ids" do
   	config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
     shipment = %{
-    	from_address: %{
-    	  company: "EasyPost",
-    	  street1: "118 2nd Street",
-    	  street2: "4th Floor",
-    	  city: "San Francisco",
-    	  state: "CA",
-    	  zip: "94105",
-    	},
-    	to_address: %{
-    	  name: "Dr. Steve Brule",
-    	  street1: "179 N Harbor Dr",
-    	  city: "Redondo Beach",
-    	  state: "CA",
-    	  zip: "90277",
-    	}
-    	parcel: %{
-    	  length: "20.2",
-    	  width: "10.9",
-    	  height: "5",
-    	  weight: "65.9",
-    	}
+      shipment: %{
+      	from_address: %{
+      	  company: "EasyPost",
+      	  street1: "118 2nd Street",
+      	  street2: "4th Floor",
+      	  city: "San Francisco",
+      	  state: "CA",
+      	  zip: "94105",
+      	},
+      	to_address: %{
+      	  name: "Dr. Steve Brule",
+      	  street1: "179 N Harbor Dr",
+      	  city: "Redondo Beach",
+      	  state: "CA",
+      	  zip: "90277",
+      	}
+      	parcel: %{
+      	  length: "20.2",
+      	  width: "10.9",
+      	  height: "5",
+      	  weight: "65.9",
+      	}
+      }
     }
 
   	{:ok, response} = Easypost.Client.create_shipment(config, shipment)
@@ -145,7 +145,7 @@ defmodule EasypostTest do
       instructions: "Special pickup instructions",
     }
 
-    {:ok, response} = Easypost.Client.quote_pickup(config, pickup)
+    {:ok, response} = Easypost.Client.create_pickup(config, pickup)
 
     assert Dict.has_key?(response, "pickup_rates")
   end
@@ -157,18 +157,18 @@ defmodule EasypostTest do
       service: "Same Day",
     }
 
-    {:ok, response} = Easypost.Client.buy_pickup(config, pickup)
+    pickup_id = "pickup_ebae2c59mdk83jsh39ma3a056ab3d1f1"
+
+    {:ok, response} = Easypost.Client.buy_pickup(config, pickup_id, pickup)
 
     assert Dict.has_key?(response, "id")
   end
 
   test "cancel a pickup" do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
-    pickup = %{
-      pickup_id: "1Z204E38YW95204424",
-    }
+    pickup_id = "pickup_ebae2c59mdk83jsh39ma3a056ab3d1f1"
 
-    {:ok, response} = Easypost.Client.cancel_pickup(config, tracking)
+    {:ok, response} = Easypost.Client.cancel_pickup(config, pickup_id)
 
     assert Dict.has_key?(response, "id")
   end
@@ -225,11 +225,9 @@ defmodule EasypostTest do
 
   test "refund USPS label" do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
-    shipment = %{
-      id: "shp_N3P0Ag8r",
-    }
+    shipment_id = "shp_N3P0Ag8r"
 
-    {:ok, response} = Easypost.Client.refund_usps_label(config, shipment)
+    {:ok, response} = Easypost.Client.refund_usps_label(config, shipment_id)
 
     assert Dict.has_key?(response, "id")
   end
