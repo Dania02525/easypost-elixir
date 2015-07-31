@@ -4,4 +4,4 @@
 /*.ez
 
 #configs
-/config
+/config/*.exs

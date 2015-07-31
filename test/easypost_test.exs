@@ -90,6 +90,18 @@ defmodule EasypostTest do
     assert Dict.has_key?(response, "id")
   end
 
+  test "insure shipment", %{shipment: shipment} do
+    config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
+    insurance = %{
+      amount: "888.50",
+    }
+    shipment_id = shipment["id"]
+
+    {:ok, response} = Easypost.Client.insure_shipment(config, shipment_id, insurance)
+
+    assert Dict.has_key?(response, "insurance")
+  end
+
   test "buy shipment", %{shipment: shipment} do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
 
@@ -104,20 +116,10 @@ defmodule EasypostTest do
     {:ok, response} = Easypost.Client.buy_shipment(config, shipment_id, rate)
 
     assert Dict.has_key?(response, "postage_label")
+    assert String.match?(response["postage_label"]["label_url"], ~r/http*/)
   end
 
-  test "insure shipment", %{shipment: shipment} do
-    config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
-    insurance = %{
-      amount: "888.50",
-    }
-    shipment_id = shipment["id"]
-
-    {:ok, response} = Easypost.Client.insure_shipment(config, shipment_id, insurance)
-
-    assert Dict.has_key?(response, "insurance")
-  end
-
+  @tag :production_only
   test "quote a pickup", %{shipment: shipment} do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
     pickup = %{
@@ -136,6 +138,7 @@ defmodule EasypostTest do
     assert Dict.has_key?(response, "pickup_rates")
   end
 
+  @tag :production_only
   test "buy a pickup", %{shipment: shipment} do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)] 
     pickup = %{
@@ -150,12 +153,13 @@ defmodule EasypostTest do
     }
 
     {:ok, newpickup} = Easypost.Client.create_pickup(config, pickup)
-    thispickuprate = newpickup["rates"] |> List.first
+    thispickuprate = newpickup["pickup_rates"] |> List.first
     {:ok, response} = Easypost.Client.buy_pickup(config, thispickuprate["id"], @validpickupconfirmation)
 
     assert response["status"] =="scheduled"
   end
 
+  @tag :production_only
   test "cancel a pickup", %{shipment: shipment} do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
     pickup = %{
@@ -170,7 +174,7 @@ defmodule EasypostTest do
     }
 
     {:ok, newpickup} = Easypost.Client.create_pickup(config, pickup)
-    thispickuprate = newpickup["rates"] |> List.first
+    thispickuprate = newpickup["pickup_rates"] |> List.first
     {:ok, _confirmed} = Easypost.Client.buy_pickup(config, thispickuprate["id"], @validpickupconfirmation)
 
     {:ok, response} = Easypost.Client.cancel_pickup(config, newpickup["id"])
@@ -220,9 +224,6 @@ defmodule EasypostTest do
 
   test "refund USPS label", %{shipment: shipment} do
     config = [endpoint: Application.get_env(:my_app, :easypost_endpoint), key: Application.get_env(:my_app, :easypost_test_key)]
-    usps_rate = shipment["rates"] |> Enum.filter(fn(x)-> x["carrier"] == "USPS" end) |> List.first
-
-    {:ok, _purchased_shipment} = Easypost.Client.buy_shipment(config, shipment["id"], %{rate: %{id: usps_rate["id"]}})
 
     {:ok, response} = Easypost.Client.refund_usps_label(config, shipment["id"])
 

@@ -91,7 +91,7 @@ defmodule Easypost.Client do
   end
 
   def cancel_pickup(conf, pickup_id) do
-    body = {}
+    body = []
     ctype = 'application/x-www-form-urlencoded'
 
     request(:post, url(conf[:endpoint], "/pickups/" <> pickup_id <> "/cancel"), conf[:key], [], ctype, body)
@@ -119,10 +119,10 @@ defmodule Easypost.Client do
   end
 
   def refund_usps_label(conf, shipment_id) do
-    body = {}
+    body = []
     ctype = 'application/x-www-form-urlencoded'
 
-    request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body)
+    request(:get, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body)
   end
 
   def insure_shipment(conf, shipment_id, insurance) do
@@ -140,7 +140,7 @@ defmodule Easypost.Client do
   end
 
   def get_child_api_keys(conf) do
-    body = {}
+    body = []
     ctype = 'application/x-www-form-urlencoded'
 
     request(:get, url(conf[:endpoint], "/api_keys"), conf[:key], [], ctype, body)
