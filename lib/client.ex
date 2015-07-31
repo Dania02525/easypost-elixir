@@ -4,209 +4,63 @@ defmodule Easypost.Client do
     quote do
       def conf, do: unquote(config)
       def create_address(address) do
-        unquote(__MODULE__).create_address(conf(), address)
+        unquote(Easypost.Client.Address).create_address(conf(), address)
       end
       def create_parcel(parcel) do
-        unquote(__MODULE__).create_parcel(conf(), parcel)
+        unquote(Easypost.Client.Parcel).create_parcel(conf(), parcel)
       end
       def create_shipment(shipment) do
-        unquote(__MODULE__).create_shipment(conf(), shipment)
+        unquote(Easypost.Client.Shipment).create_shipment(conf(), shipment)
+      end
+      def create_batch(shipments) do
+        unquote(Easypost.Client.Batch).create_batch(conf(), shipments)
+      end
+      def create_and_buy_batch(shipments) do
+        unquote(Easypost.Client.Batch).create_and_buy_batch(conf(), shipments)
+      end
+      def batch_labels(batch_id, label) do
+        unquote(Easypost.Client.Batch).batch_labels(conf(), batch_id, label)
+      end
+      def add_to_batch(batch_id, shipments) do
+        unquote(Easypost.Client.Batch).add_to_batch(conf(), batch_id, shipments)
+      end
+      def remove_from_batch(batch_id, shipments) do
+        unquote(Easypost.Client.Batch).remove_from_batch(conf(), batch_id, shipments)
       end
       def insure_shipment(shipment_id, insurance) do
-        unquote(__MODULE__).insure_shipment(conf(), shipment_id, insurance)
+        unquote(Easypost.Client.Shipment).insure_shipment(conf(), shipment_id, insurance)
       end
       def buy_shipment(shipment_id, rate) do
-        unquote(__MODULE__).buy_shipment(conf(), shipment_id, rate)
+        unquote(Easypost.Client.Shipment).buy_shipment(conf(), shipment_id, rate)
       end
       def create_customs_forms(customs_info) do
-        unquote(__MODULE__).create_customs_forms(conf(), customs_info)
+        unquote(Easypost.Client.Customs).create_customs_forms(conf(), customs_info)
       end
       def create_pickup(pickup) do
-        unquote(__MODULE__).create_pickup(conf(), pickup)
+        unquote(Easypost.Client.Pickup).create_pickup(conf(), pickup)
       end
       def buy_pickup(pickup_id, pickup) do
-        unquote(__MODULE__).buy_pickup(conf(), pickup_id, pickup)
+        unquote(Easypost.Client.Pickup).buy_pickup(conf(), pickup_id, pickup)
       end
       def cancel_pickup(pickup_id) do
-        unquote(__MODULE__).cancel_pickup(conf(), pickup_id)
+        unquote(Easypost.Client.Pickup).cancel_pickup(conf(), pickup_id)
       end
       def track(tracking) do
-        unquote(__MODULE__).track(conf(), tracking)
+        unquote(Easypost.Client.Tracker).track(conf(), tracking)
       end
       def create_user(user) do
-        unquote(__MODULE__).create_user(conf(), user)
+        unquote(Easypost.Client.User).create_user(conf(), user)
       end
       def get_child_api_keys() do
-        unquote(__MODULE__).get_child_api_keys(conf())
+        unquote(Easypost.Client.User).get_child_api_keys(conf())
       end
       def add_carrier_account(carrier) do
-        unquote(__MODULE__).add_carrier_account(conf(), carrier)
+        unquote(Easypost.Client.User).add_carrier_account(conf(), carrier)
       end
       def refund_usps_label(shipment_id) do
-        unquote(__MODULE__).refund_usps_label(conf(), shipment_id)
+        unquote(Easypost.Client.Shipment).refund_usps_label(conf(), shipment_id)
       end
     end
-  end
-
-  def create_address(conf, address) do 	
-    body = encode(address)
-  	ctype = 'application/x-www-form-urlencoded'
-
-  	request(:post, url(conf[:endpoint], "/addresses"), conf[:key], [], ctype, body)
-  end
-
-  def create_parcel(conf, parcel) do  
-    body = encode(parcel)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/parcels"), conf[:key], [], ctype, body)
-  end
-
-  def create_shipment(conf, shipment) do
-    body = encode(shipment)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/shipments"), conf[:key], [], ctype, body)
-  end
-
-  def create_customs_forms(conf, customs_info) do
-    body = encode(customs_info)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/customs_infos"), conf[:key], [], ctype, body)
-  end
-
-  def create_pickup(conf, pickup) do
-    body = encode(pickup)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/pickups"), conf[:key], [], ctype, body)
-  end
-
-  def create_user(conf, user) do
-    body = encode(user)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/users"), conf[:key], [], ctype, body)
-  end
-
-  def cancel_pickup(conf, pickup_id) do
-    body = []
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/pickups/" <> pickup_id <> "/cancel"), conf[:key], [], ctype, body)
-  end
-
-  def buy_pickup(conf, pickup_id, pickup) do
-    body = encode(pickup)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/pickups/" <> pickup_id <> "/buy"), conf[:key], [], ctype, body)
-  end
-
-  def track(conf, tracking) do
-    body = encode(tracking)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/trackers"), conf[:key], [], ctype, body)
-  end
-
-  def add_carrier_account(conf, carrier) do
-    body = encode(carrier)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/carrier_accounts"), conf[:key], [], ctype, body)
-  end
-
-  def refund_usps_label(conf, shipment_id) do
-    body = []
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:get, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body)
-  end
-
-  def insure_shipment(conf, shipment_id, insurance) do
-    body = encode(insurance)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/insure"), conf[:key], [], ctype, body)
-  end
-
-  def buy_shipment(conf, shipment_id, rate) do
-    body = encode(rate)
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:post, url(conf[:endpoint], "/shipments/" <> shipment_id <> "/buy"), conf[:key], [], ctype, body)
-  end
-
-  def get_child_api_keys(conf) do
-    body = []
-    ctype = 'application/x-www-form-urlencoded'
-
-    request(:get, url(conf[:endpoint], "/api_keys"), conf[:key], [], ctype, body)
-  end
-
-  ##Utilities
-
-  def encode(map) do
-    map
-      |> Enum.map(fn({k,v})-> process(Atom.to_string(k), v) end)
-      |> List.flatten
-      |> URI.encode_query
-  end
-
-  def process(acc, v) when is_map(v) do
-    v 
-    |> Enum.map(fn({k, v})-> process(acc <> "[" <> Atom.to_string(k) <> "]", v) end)
-  end
-
-  def process(acc, v) when is_list(v) do
-    v 
-    |> Enum.with_index
-    |> Enum.map(fn({v, i})-> process(acc <> "[" <> Integer.to_string(i) <> "]", v) end)
-  end
-
-  def process(acc, v) do
-    {acc, v}
-  end
-
-  def url(domain, path), do: Path.join([domain, path])
-
-  def request(method, url, key, headers, ctype, body) do
-  	url = String.to_char_list(url)
-  	case method do
-  	  :get ->
-  	    headers = headers ++ [auth_header(key)]
-  	    :httpc.request(:get, {url, headers}, [], [])
-  	  _ ->
-  	    headers = headers ++ [auth_header(key), {'Content-Type', ctype}]
-  	    :httpc.request(method, {url, headers, ctype, body}, [], body_format: :binary)
-  	end 
-  	|> parse_response
-
-  end
-
-  defp auth_header(key) do
-	{'Authorization', 'Basic ' ++ String.to_char_list(Base.encode64(key <> ":"))}
-  end
-
-  defp parse_response(response) do
-  	case response do
-  	  {:ok, {{_httpvs, 200, _status_phrase}, json_body}} ->
-	      {:ok, Poison.decode!(json_body)}
-      {:ok, {{_httpvs, 201, _status_phrase}, json_body}} ->
-        {:ok, Poison.decode!(json_body)}
-	    {:ok, {{_httpvs, 200, _status_phrase}, _headers, json_body}} ->
-	      {:ok, Poison.decode!(json_body)}
-      {:ok, {{_httpvs, 201, _status_phrase}, _headers, json_body}} ->
-        {:ok, Poison.decode!(json_body)}
-	    {:ok, {{_httpvs, status, _status_phrase}, json_body}} ->
-		    {:error, status, Poison.decode!(json_body)}
-	    {:ok, {{_httpvs, status, _status_phrase}, _headers, json_body}} ->
-		    {:error, status, Poison.decode!(json_body)}
-	    {:error, reason} -> 
-        {:error, :bad_fetch, reason}
-  	end
   end
 end
 
