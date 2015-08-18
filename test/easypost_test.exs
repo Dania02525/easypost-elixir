@@ -1,6 +1,6 @@
 defmodule EasypostTest do
   use ExUnit.Case, async: false
-  use Easypost.Client, endpoint: "https://api.easypost.com/v2/", key: "lRN9kaRaCaugYUugMFPiaQ"
+  use Easypost.Client, endpoint: Application.get_env(:myapp, :easypost_endpoint), key: Application.get_env(:myapp, :easypost_test_key)
 
   ExUnit.configure exclude: [production_only: true]
 
