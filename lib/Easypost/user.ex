@@ -10,14 +10,14 @@ defmodule Easypost.Client.User do
   end
 
   def add_carrier_account(conf, carrier) do
-    body = Helpers.encode(%{carrier_account: carrier})
+    body = Helpers.encode(%{"carrier_account" => carrier})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/carrier_accounts"), conf[:key], [], ctype, body)
   end
 
   def create_user(conf, user) do
-    body = Helpers.encode(%{user: user})
+    body = Helpers.encode(%{"user" => user})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/users"), conf[:key], [], ctype, body)

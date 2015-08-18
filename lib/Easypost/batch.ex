@@ -3,14 +3,14 @@ defmodule Easypost.Client.Batch do
   alias Easypost.Client.Requester
 
   def create_batch(conf, shipments) do
-    body = Helpers.encode(%{batch: shipments})
+    body = Helpers.encode(%{"batch" => shipments})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/batches"), conf[:key], [], ctype, body)
   end
 
   def create_and_buy_batch(conf, shipments) do
-    body = Helpers.encode(%{batch: shipments})
+    body = Helpers.encode(%{"batch" => shipments})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/create_and_buy"), conf[:key], [], ctype, body)
@@ -24,14 +24,14 @@ defmodule Easypost.Client.Batch do
   end
 
   def add_to_batch(conf, batch_id, shipments) do
-    body = Helpers.encode(%{shipments: shipments})
+    body = Helpers.encode(%{"shipments" => shipments})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/add_shipments"), conf[:key], [], ctype, body)
   end
 
   def remove_from_batch(conf, batch_id, shipments) do
-    body = Helpers.encode(%{shipments: shipments})
+    body = Helpers.encode(%{"shipments" => shipments})
     ctype = 'application/x-www-form-urlencoded'
 
     Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/remove_shipments"), conf[:key], [], ctype, body)

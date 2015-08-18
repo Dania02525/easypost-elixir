@@ -4,14 +4,14 @@ defmodule Easypost.Client.Helpers do
 
   def encode(map) do
     map
-      |> Enum.map(fn({k,v})-> process(Atom.to_string(k), v) end)
+      |> Enum.map(fn({k,v})-> process(k, v) end)
       |> List.flatten
       |> URI.encode_query
   end
 
   def process(acc, v) when is_map(v) do
     v 
-    |> Enum.map(fn({k, v})-> process(acc <> "[" <> Atom.to_string(k) <> "]", v) end)
+    |> Enum.map(fn({k, v})-> process(acc <> "[" <> k <> "]", v) end)
   end
 
   def process(acc, v) when is_list(v) do
