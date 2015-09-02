@@ -16,26 +16,26 @@ defmodule EasypostTest do
 
   setup_all do
     Easypost.start
-    {:ok, shipment} = create_shipment(%{"from_address" => @validaddress1, "to_address" => @validaddress2, "parcel" => @validparcel, "customs_info" => @validcustomsinfo})
+    shipment = create_shipment(%{"from_address" => @validaddress1, "to_address" => @validaddress2, "parcel" => @validparcel, "customs_info" => @validcustomsinfo})
     {:ok, shipment: shipment}
   end
 
   test "adding some valid address" do
-  	{:ok, response} = create_address(@validaddress1)
+  	address = create_address(@validaddress1)
 
-  	assert Dict.has_key?(response, "id")
+    assert address.__struct__ == Easypost.Address
   end
 
   test "adding a parcel" do
-    {:ok, response} = create_parcel(@validparcel)
+    parcel = create_parcel(@validparcel)
 
-    assert Dict.has_key?(response, "id")
+    assert parcel.__struct__ == Easypost.Parcel
   end
 
   test "add customs info forms" do
-    {:ok, response} = create_customs_forms(@validcustomsinfo)
+    customs_info = create_customs_info(@validcustomsinfo)
 
-    assert Dict.has_key?(response, "id")
+    assert customs_info.__struct__ == Easypost.CustomsInfo
   end
 
   test "shipping to valid address without address or parcel ids" do
@@ -45,9 +45,9 @@ defmodule EasypostTest do
       "parcel" => @validparcel
     }
 
-    {:ok, response} = create_shipment(shipment)
+    result = create_shipment(shipment)
 
-    assert Dict.has_key?(response, "rates")
+    assert result.__struct__ == Easypost.Shipment
   end
 
   test "create return shipment" do
@@ -57,45 +57,41 @@ defmodule EasypostTest do
       "parcel" => @validparcel,
       "is_return" => "true"
     }
-    {:ok, response} = create_shipment(shipment)
+    result = create_shipment(shipment)
 
-    assert Dict.has_key?(response, "id")
+    assert result.__struct__ == Easypost.Shipment
   end
 
   test "creating shipment with saved addresses, customs info, and parcel", %{shipment: shipment} do
     shipment = %{
-      "from_address" => %{"id" => shipment["from_address"]["id"]},
-      "to_address" => %{"id" => shipment["to_address"]["id"]},
-      "parcel" => %{"id" => shipment["parcel"]["id"]},
-      "customs_info" => %{"id" => shipment["customs_info"]["id"]},        
+      "from_address" => %{"id" => shipment.from_address.id]},
+      "to_address" => %{"id" => shipment.to_address.id]},
+      "parcel" => %{"id" => shipment.parcel.id]},
+      "customs_info" => %{"id" => shipment.customs_info.id]},        
     }
-    {:ok, response} = create_shipment(shipment)
+    result = create_shipment(shipment)
 
-    assert Dict.has_key?(response, "id")
+    assert result.__struct__ == Easypost.Shipment
   end
 
   test "insure shipment", %{shipment: shipment} do
     insurance = %{
       "amount" => "888.50",
     }
-    shipment_id = shipment["id"]
 
-    {:ok, response} = insure_shipment(shipment_id, insurance)
+    result = insure_shipment(shipment.id, insurance)
 
-    assert Dict.has_key?(response, "insurance")
+    assert result.__struct__ == Easypost.Shipment
   end
 
   test "buy shipment", %{shipment: shipment} do
-    selected_rate = shipment["rates"] |> List.first
+    selected_rate = shipment.rates |> List.first
 
-    rate = %{"id" => selected_rate["id"]}
+    rate = %{"id" => selected_rate.id]}
 
-    shipment_id = shipment["id"]
+    result = buy_shipment(shipment.id, rate)
 
-    {:ok, response} = buy_shipment(shipment_id, rate)
-
-    assert Dict.has_key?(response, "postage_label")
-    assert String.match?(response["postage_label"]["label_url"], ~r/http*/)
+    assert result.postage_label.__struct__ == Easypost.PostageLabel
   end
 
   test "create batch shipment" do
@@ -112,9 +108,9 @@ defmodule EasypostTest do
       },
     ]
 
-    {:ok, response} = create_batch(shipments)
+    result = create_batch(shipments)
 
-    assert response["object"] == "Batch"
+    assert result.__struct__ == Easypost.Batch
   end
 
   test "create and buy batch" do
@@ -135,9 +131,9 @@ defmodule EasypostTest do
       },
     ]
 
-    {:ok, response} = create_and_buy_batch(shipments)
+    result = create_and_buy_batch(shipments)
 
-    assert response["object"] == "Batch"
+    assert result.__struct__ == Easypost.Batch
   end
 
   test "add to batch", %{shipment: shipment} do
@@ -158,12 +154,12 @@ defmodule EasypostTest do
       },
     ]
 
-    {:ok, batch} = create_batch(shipments)
+    batch = create_batch(shipments)
 
-    {:ok, response} = add_to_batch(batch["id"], [%{"id" => shipment["id"]}])
+    result = add_to_batch(batch.id, [%{"id" => shipment.id}])
 
-    assert response["object"] == "Batch"
-    assert Enum.count(response["shipments"], fn(x)-> x["id"] == shipment["id"] end) == 1
+    assert result.__struct__ == Easypost.Batch
+    assert Enum.count(result.shipments, fn(x)-> x.id == shipment.id end) == 1
   end
 
   test "remove from batch" do
@@ -184,13 +180,13 @@ defmodule EasypostTest do
       },
     ]
 
-    {:ok, batch} = create_batch(shipments)
-    firstshipment = batch["shipments"] |> List.first
+    batch = create_batch(shipments)
+    firstshipment = batch.shipments |> List.first
 
-    {:ok, response} = remove_from_batch(batch["id"], [%{"id" => firstshipment["id"]}])
+    result = remove_from_batch(batch.id, [%{"id" => firstshipment.id}])
 
-    assert response["object"] == "Batch"
-    assert Enum.count(response["shipments"], fn(x)-> x["id"] == firstshipment["id"] end) == 0
+    assert result.__struct__ == Easypost.Batch
+    assert Enum.count(result.shipments, fn(x)-> x.id == firstshipment.id end) == 0
   end
 
   @tag :production_only
@@ -199,14 +195,14 @@ defmodule EasypostTest do
       "reference" => "internal_id_1234",
       "min_datetime" => "2014-10-20 17:10:59",
       "max_datetime" => "2014-10-21 10:22:40",
-      "shipment" => %{"id" => shipment["id"]},
+      "shipment" => %{"id" => shipment.id},
       "address" => @validaddress1,
       "instructions" => "Special pickup instructions",
     }
 
-    {:ok, response} = create_pickup(pickup)
+    result = create_pickup(pickup)
 
-    assert Dict.has_key?(response, "pickup_rates")
+    assert result.__struct__ == Easypost.Pickup
   end
 
   @tag :production_only
@@ -215,16 +211,17 @@ defmodule EasypostTest do
       "reference" => "internal_id_1234",
       "min_datetime" => "2014-10-20 17:10:59",
       "max_datetime" => "2014-10-21 10:22:40",
-      "shipment" => %{id: shipment["id"]},
+      "shipment" => %{id: shipment.id},
       "address" => @validaddress1,
       "instructions" => "Special pickup instructions",
     }
 
-    {:ok, newpickup} = create_pickup(pickup)
-    thispickuprate = newpickup["pickup_rates"] |> List.first
-    {:ok, response} = buy_pickup(thispickuprate["id"], @validpickupconfirmation)
+    newpickup = create_pickup(pickup)
+    thispickuprate = newpickup.pickup_rates |> List.first
+    result = buy_pickup(thispickuprate.id, @validpickupconfirmation)
 
-    assert response["status"] =="scheduled"
+    assert result.__struct__ == Easypost.Pickup
+    assert result.status == "scheduled"
   end
 
   @tag :production_only
@@ -233,26 +230,27 @@ defmodule EasypostTest do
       "reference" => "internal_id_1234",
       "min_datetime" => "2014-10-20 17:10:59",
       "max_datetime" => "2014-10-21 10:22:40",
-      "shipment" => %{"id" => shipment["id"]},
+      "shipment" => %{"id" => shipment.id},
       "address" => @validaddress1,
       "instructions" => "Special pickup instructions",
     }
 
-    {:ok, newpickup} = create_pickup(pickup)
+    newpickup = create_pickup(pickup)
 
-    thispickuprate = newpickup["pickup_rates"] |> List.first
+    thispickuprate = newpickup.pickup_rates |> List.first
 
-    {:ok, _confirmed} = buy_pickup(thispickuprate["id"], @validpickupconfirmation)
+    _confirmed = buy_pickup(thispickuprate.id, @validpickupconfirmation)
 
-    {:ok, response} = cancel_pickup(newpickup["id"])
+    response = cancel_pickup(newpickup.id)
 
-    assert response["status"] =="cancelled"
+    assert result.__struct__ == Easypost.Pickup
+    assert result.status == "cancelled"
   end
 
   test "track a package by tracking number" do
-    {:ok, response} = track(@validtracking)
+    result = track(@validtracking)
 
-    assert Dict.has_key?(response, "id")
+    assert result.__struct__ == Easypost.Tracker
   end
 
   @tag :production_only
@@ -261,30 +259,30 @@ defmodule EasypostTest do
       "name" => "Acme inc",
     }
 
-    {:ok, response} = create_user(user)
+    result = create_user(user)
 
-    assert Dict.has_key?(response, "id")
+    assert result.__struct__ == Easypost.User
   end
 
   @tag :production_only
   test "get user child API keys" do
-    {:ok, response} = get_child_api_keys()
+    result = get_child_api_keys()
 
-    assert Dict.has_key?(response, "keys")
+    assert Dict.has_key?(result, "keys")
   end
 
   @tag :production_only
   test "add_carrier account" do
-    {:ok, response} = add_carrier_account(@validcarrieraccount)
+    result = add_carrier_account(@validcarrieraccount)
 
-    assert Dict.has_key?(response, "id")
+    assert result.__struct__ == Easypost.CarrierAccount
   end
 
   @tag :production_only
   test "refund USPS label", %{shipment: shipment} do
-    {:ok, response} = refund_usps_label(shipment["id"])
+    result = refund_usps_label(shipment.id)
 
-    assert response == "Refund"
+    assert result.__struct__ == Easypost.Refund
   end
 
 end

@@ -1,4 +1,4 @@
-defmodule Easypost.Client.Requester do
+defmodule Easypost.Requester do
 
   def request(method, url, key, headers, ctype, body) do
     url = String.to_char_list(url)

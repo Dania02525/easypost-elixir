@@ -1,4 +1,4 @@
-defmodule Easypost.Client.Helpers do
+defmodule Easypost.Helpers do
 
   def url(domain, path), do: Path.join([domain, path])
 
