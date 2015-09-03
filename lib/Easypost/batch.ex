@@ -2,15 +2,16 @@ defmodule Easypost.Batch do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Batch",
     shipments: [],
     status: %{},
     label_url: "",
+    num_shipments: 0,
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -18,34 +19,36 @@ defmodule Easypost.Batch do
     shipments: list(Easypost.Shipment),
     status: map,
     label_url: String.t,
+    num_shipments: number,
     created_at: String.t,
     updated_at: String.t
   }
 
   @spec create_batch(map, list) :: Easypost.Batch.t
   def create_batch(conf, shipments) do
-    body = Helpers.encode(%{"batch" => shipments})
+    body = Helpers.encode(%{"batch" => %{"shipment" => shipments}})
     ctype = 'application/x-www-form-urlencoded'
 
     
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches"), conf[:key], [], ctype, body) do
       {:ok, batch}->
+
         struct(Easypost.Batch, batch)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
-  @spec create_and_buy(map, list) :: Easypost.Batch.t
+  @spec create_and_buy_batch(map, list) :: Easypost.Batch.t
   def create_and_buy_batch(conf, shipments) do
-    body = Helpers.encode(%{"batch" => shipments})
+    body = Helpers.encode(%{"batch" => %{"shipment" => shipments}})
     ctype = 'application/x-www-form-urlencoded'
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/create_and_buy"), conf[:key], [], ctype, body) do
       {:ok, batch}->
         struct(Easypost.Batch, batch)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -57,8 +60,8 @@ defmodule Easypost.Batch do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/label"), conf[:key], [], ctype, body) do
       {:ok, batch}->
         struct(Easypost.Batch, batch)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -70,8 +73,8 @@ defmodule Easypost.Batch do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/add_shipments"), conf[:key], [], ctype, body) do
       {:ok, batch}->
         struct(Easypost.Batch, batch)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -83,8 +86,8 @@ defmodule Easypost.Batch do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/remove_shipments"), conf[:key], [], ctype, body) do
       {:ok, batch}->
         struct(Easypost.Batch, batch)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

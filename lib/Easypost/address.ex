@@ -2,7 +2,7 @@ defmodule Easypost.Address do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Address",
     street1: "",
@@ -18,7 +18,7 @@ defmodule Easypost.Address do
     residential: false,
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -46,8 +46,8 @@ defmodule Easypost.Address do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/addresses"), conf[:key], [], ctype, body) do
       {:ok, address}->
         struct(Easypost.Address, address)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

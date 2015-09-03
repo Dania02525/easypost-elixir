@@ -2,7 +2,7 @@ defmodule Easypost.User do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "User",
     name: "",
@@ -13,7 +13,7 @@ defmodule Easypost.User do
     secondary_recharge_amount: 0,
     recharge_threshold: 0,
     children: []
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -36,8 +36,8 @@ defmodule Easypost.User do
     case Requester.request(:get, Helpers.url(conf[:endpoint], "/api_keys"), conf[:key], [], ctype, body) do
       {:ok, result}->
         result
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -49,8 +49,8 @@ defmodule Easypost.User do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/carrier_accounts"), conf[:key], [], ctype, body) do
       {:ok, account}->
         struct(Easypost.CarrierAccount, account)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -62,8 +62,8 @@ defmodule Easypost.User do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/users"), conf[:key], [], ctype, body) do
       {:ok, user}->
         struct(Easypost.User, user)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

@@ -2,7 +2,7 @@ defmodule Easypost.CustomsInfo do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "CustomsInfo",
     contents_explanation: "",
@@ -16,7 +16,7 @@ defmodule Easypost.CustomsInfo do
     customs_items: [],
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -42,8 +42,8 @@ defmodule Easypost.CustomsInfo do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/customs_infos"), conf[:key], [], ctype, body) do
       {:ok, info}->
         struct(Easypost.CustomsInfo, info)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

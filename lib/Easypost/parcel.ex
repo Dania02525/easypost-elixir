@@ -2,7 +2,7 @@ defmodule Easypost.Parcel do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Parcel",
     length: 0,
@@ -12,7 +12,7 @@ defmodule Easypost.Parcel do
     weight: 0,
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -31,11 +31,11 @@ defmodule Easypost.Parcel do
     body = Helpers.encode(%{"parcel" => parcel})
     ctype = 'application/x-www-form-urlencoded'
 
-    Requester.request(:post, Helpers.url(conf[:endpoint], "/parcels"), conf[:key], [], ctype, body)
+    case Requester.request(:post, Helpers.url(conf[:endpoint], "/parcels"), conf[:key], [], ctype, body) do
       {:ok, parcel}->
         struct(Easypost.Parcel, parcel)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

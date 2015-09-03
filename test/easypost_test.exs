@@ -17,6 +17,7 @@ defmodule EasypostTest do
   setup_all do
     Easypost.start
     shipment = create_shipment(%{"from_address" => @validaddress1, "to_address" => @validaddress2, "parcel" => @validparcel, "customs_info" => @validcustomsinfo})
+
     {:ok, shipment: shipment}
   end
 
@@ -24,6 +25,12 @@ defmodule EasypostTest do
   	address = create_address(@validaddress1)
 
     assert address.__struct__ == Easypost.Address
+  end
+
+  test "adding some invalid address" do
+    result = create_address(%{})
+    IO.inspect result
+    assert result.__struct__ == Easypost.Error
   end
 
   test "adding a parcel" do
@@ -64,10 +71,10 @@ defmodule EasypostTest do
 
   test "creating shipment with saved addresses, customs info, and parcel", %{shipment: shipment} do
     shipment = %{
-      "from_address" => %{"id" => shipment.from_address.id]},
-      "to_address" => %{"id" => shipment.to_address.id]},
-      "parcel" => %{"id" => shipment.parcel.id]},
-      "customs_info" => %{"id" => shipment.customs_info.id]},        
+      "from_address" => %{"id" => shipment.from_address.id},
+      "to_address" => %{"id" => shipment.to_address.id},
+      "parcel" => %{"id" => shipment.parcel.id},
+      "customs_info" => %{"id" => shipment.customs_info.id},        
     }
     result = create_shipment(shipment)
 
@@ -86,8 +93,8 @@ defmodule EasypostTest do
 
   test "buy shipment", %{shipment: shipment} do
     selected_rate = shipment.rates |> List.first
-
-    rate = %{"id" => selected_rate.id]}
+    
+    rate = %{"id" => selected_rate.id}
 
     result = buy_shipment(shipment.id, rate)
 
@@ -99,18 +106,19 @@ defmodule EasypostTest do
       %{
         "from_address" => @validaddress1,
         "to_address" => @validaddress2,
-        "parcel" => @validparcel,       
+        "parcel" => @validparcel,   
       },
       %{
         "from_address" => @validaddress2,
         "to_address" => @validaddress1,
-        "parcel" => @validparcel,       
+        "parcel" => @validparcel,      
       },
     ]
 
     result = create_batch(shipments)
 
     assert result.__struct__ == Easypost.Batch
+    assert result.num_shipments == 2
   end
 
   test "create and buy batch" do
@@ -120,20 +128,22 @@ defmodule EasypostTest do
         "to_address" => @validaddress2,
         "parcel" => @validparcel, 
         "carrier" => "USPS",
-        "service" => "Priority",      
+        "service" => "Priority",    
       },
       %{
         "from_address" => @validaddress2,
         "to_address" => @validaddress1,
         "parcel" => @validparcel,
         "carrier" => "USPS",
-        "service" => "Priority",       
+        "service" => "Priority",      
       },
     ]
+
 
     result = create_and_buy_batch(shipments)
 
     assert result.__struct__ == Easypost.Batch
+    assert result.num_shipments == 2
   end
 
   test "add to batch", %{shipment: shipment} do
@@ -143,50 +153,54 @@ defmodule EasypostTest do
         "to_address" => @validaddress2,
         "parcel" => @validparcel, 
         "carrier" => "USPS",
-        "service" => "Priority",      
+        "service" => "Priority", 
       },
       %{
         "from_address" => @validaddress2,
         "to_address" => @validaddress1,
         "parcel" => @validparcel,
         "carrier" => "USPS",
-        "service" => "Priority",       
+        "service" => "Priority",    
       },
     ]
 
     batch = create_batch(shipments)
-
+    assert batch.num_shipments == 2
     result = add_to_batch(batch.id, [%{"id" => shipment.id}])
 
     assert result.__struct__ == Easypost.Batch
-    assert Enum.count(result.shipments, fn(x)-> x.id == shipment.id end) == 1
+    assert result.num_shipments == 3
   end
 
-  test "remove from batch" do
+  test "remove from batch", %{shipment: shipment} do
      shipments = [
       %{
         "from_address" => @validaddress1,
         "to_address" => @validaddress2,
         "parcel" => @validparcel, 
         "carrier" => "USPS",
-        "service" => "Priority",      
+        "service" => "Priority",    
       },
       %{
         "from_address" => @validaddress2,
         "to_address" => @validaddress1,
         "parcel" => @validparcel,
         "carrier" => "USPS",
-        "service" => "Priority",       
+        "service" => "Priority",      
       },
     ]
 
     batch = create_batch(shipments)
-    firstshipment = batch.shipments |> List.first
 
-    result = remove_from_batch(batch.id, [%{"id" => firstshipment.id}])
+    added = add_to_batch(batch.id, [%{"id" => shipment.id}])
+
+    assert added.num_shipments == 3
+
+    result = remove_from_batch(batch.id, [%{"id" => shipment.id}])
 
     assert result.__struct__ == Easypost.Batch
-    assert Enum.count(result.shipments, fn(x)-> x.id == firstshipment.id end) == 0
+
+    assert result.num_shipments == 2
   end
 
   @tag :production_only
@@ -241,7 +255,7 @@ defmodule EasypostTest do
 
     _confirmed = buy_pickup(thispickuprate.id, @validpickupconfirmation)
 
-    response = cancel_pickup(newpickup.id)
+    result = cancel_pickup(newpickup.id)
 
     assert result.__struct__ == Easypost.Pickup
     assert result.status == "cancelled"

@@ -1,6 +1,6 @@
 defmodule Easypost.Rate do
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Rate",
     carrier_account_id: "",
@@ -13,7 +13,7 @@ defmodule Easypost.Rate do
     delivery_date_guaranteed: false,
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,

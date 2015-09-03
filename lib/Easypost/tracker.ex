@@ -2,7 +2,7 @@ defmodule Easypost.Tracker do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Tracker",
     mode: "",
@@ -16,7 +16,7 @@ defmodule Easypost.Tracker do
     shipment_id: "",
     carrier: "",
     tracking_details: []
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -42,8 +42,8 @@ defmodule Easypost.Tracker do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/trackers"), conf[:key], [], ctype, body) do
       {:ok, tracker}->
         struct(Easypost.Tracker, tracker)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

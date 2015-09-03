@@ -1,6 +1,6 @@
 defmodule Easypost.PostageLabel do
 
-  defstruct {
+  defstruct [
     id: "",
     object: "PostageLabel",
     created_at: "",
@@ -16,7 +16,7 @@ defmodule Easypost.PostageLabel do
     label_pdf_url: "",
     label_epl2_url: "",
     label_zpl_url: "",
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,

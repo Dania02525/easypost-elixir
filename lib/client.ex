@@ -34,7 +34,7 @@ defmodule Easypost.Client do
         unquote(Easypost.Shipment).buy_shipment(conf(), shipment_id, rate)
       end
       def create_customs_info(customs_info) do
-        unquote(Easypost.CustomsForm).create_customs_info(conf(), customs_info)
+        unquote(Easypost.CustomsInfo).create_customs_info(conf(), customs_info)
       end
       def create_pickup(pickup) do
         unquote(Easypost.Pickup).create_pickup(conf(), pickup)

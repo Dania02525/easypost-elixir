@@ -18,42 +18,26 @@ defmodule MyApp.Somemodule do
 
   #add an address, where address is map like %{"name" => "something", "street1" => "something" ...etc} returned map has easypost address id
   def add_shipping_address(user) do
-    case create_address(user.address) do
-      {:ok, response} ->
-        response
-      {:error, status, reason} ->
-        reason
-    end
+    user =  create_address(user.address)
+    #result is %Easypost.User{key: "val", key: "val"}
   end
 
   #get quotes for shipment when shipment is map like %{"from_address" => %{"name" => "something"}, "to_address" => %{"name" => "something"}, "parcel" => %{"width" => "something"}}
   def get_shipping_quotes(shipment) do
-    case create_shipment(shipment) do
-      {:ok, response} ->
-        response
-      {:error, status, reason} ->
-        reason
-    end
+    shipment =  create_shipment(shipment)
+    #result is %Easypost.Shipment{key: "val", key: "val"}
   end
 
   #returns postage label with print url when rate is like: %{"id" => "id of chosen rate"}
   def ship_package(shipment_id, rate) do
-    case buy_shipment(shipment_id, rate) do
-      {:ok, response} ->
-        response
-      {:error, status, reason} ->
-        reason
-    end
+    shipment =  buy_shipment(shipment_id, rate)
+    #result is %Easypost.Shipment{key: "val", key: "val"}
   end
 
   #create batch shipment when shipments is list like [%{"from_address" => %{"name" => "something"}, "to_address" => %{"name" => "something"}, "parcel" => %{"width" => "something"}}, %{"id" => "12346"}]
   def start_batch(shipments) do
-    case create_batch(shipments) do
-      {:ok, response} ->
-        response
-      {:error, status, reason} ->
-        reason
-    end
+    batch =  create_batch(shipments)
+    #result is %Easypost.Batch{key: "val", key: "val"}
   end
 end
 

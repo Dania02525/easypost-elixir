@@ -2,7 +2,7 @@ defmodule Easypost.Shipment do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Shipment",
     mode: "",
@@ -39,7 +39,7 @@ defmodule Easypost.Shipment do
     delivery_confirmation: "NO_SIGNATURE",
     dry_ice: 0,
     dry_ice_medical: 0,
-    dry_ice_weight: 0;
+    dry_ice_weight: 0,
     handling_instructions: "",
     hold_for_pickup: false,
     invoice_number: "",
@@ -55,7 +55,7 @@ defmodule Easypost.Shipment do
     smartpost_manifest: "",
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -94,7 +94,7 @@ defmodule Easypost.Shipment do
     delivery_confirmation: String.t,
     dry_ice: number,
     dry_ice_medical: number,
-    dry_ice_weight: number;
+    dry_ice_weight: number,
     handling_instructions: String.t,
     hold_for_pickup: boolean,
     invoice_number: String.t,
@@ -119,9 +119,10 @@ defmodule Easypost.Shipment do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
+
         struct(Easypost.Shipment, shipment)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -133,8 +134,8 @@ defmodule Easypost.Shipment do
     case Requester.request(:get, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body) do
       {:ok, refund}->
         struct(Easypost.Refund, refund)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -146,8 +147,8 @@ defmodule Easypost.Shipment do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/insure"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
         struct(Easypost.Shipment, shipment)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -159,8 +160,8 @@ defmodule Easypost.Shipment do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/buy"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
         struct(Easypost.Shipment, shipment)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 

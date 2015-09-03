@@ -1,6 +1,6 @@
 defmodule Easypost.Refund do 
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Refund",
     tracking_code: "",
@@ -10,7 +10,7 @@ defmodule Easypost.Refund do
     shipment_id: "",
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,

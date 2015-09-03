@@ -1,6 +1,6 @@
 defmodule Easypost.CarrierAccount do 
 
-  defstruct {
+  defstruct [
     id: "",
     object: "CarrierAccount",
     type: "",
@@ -13,7 +13,7 @@ defmodule Easypost.CarrierAccount do
     fields: %{},
     created_at: "",
     updated_at: ""
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,

@@ -1,6 +1,6 @@
 defmodule Easypost.PickupRate do 
 
-  defstruct {
+  defstruct [
     created_at: "",
     currency: "",
     mode: "",
@@ -11,7 +11,7 @@ defmodule Easypost.PickupRate do
     pickup_id: "",
     id: "",
     object: "PickupRate"
-  }
+  ]
 
   @type t :: %__MODULE__{
     created_at: String.t,

@@ -2,7 +2,7 @@ defmodule Easypost.Pickup do
   alias Easypost.Helpers
   alias Easypost.Requester
 
-  defstruct {
+  defstruct [
     id: "",
     object: "Pickup",
     created_at: "",
@@ -19,7 +19,7 @@ defmodule Easypost.Pickup do
     address: nil,
     carrier_accounts: [],
     pickup_rates: []
-  }
+  ]
 
   @type t :: %__MODULE__{
     id: String.t,
@@ -48,8 +48,8 @@ defmodule Easypost.Pickup do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
         struct(Easypost.Pickup, pickup)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -61,8 +61,8 @@ defmodule Easypost.Pickup do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups/" <> pickup_id <> "/buy"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
         struct(Easypost.Pickup, pickup)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
@@ -74,8 +74,8 @@ defmodule Easypost.Pickup do
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups/" <> pickup_id <> "/cancel"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
         struct(Easypost.Pickup, pickup)
-      {:error, status, reason}->
-        "Error: " <> status <> reason
+      {:error, _status, reason}->
+        struct(Easypost.Error, reason)
     end
   end
 
