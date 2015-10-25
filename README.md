@@ -19,25 +19,33 @@ defmodule MyApp.Somemodule do
   #add an address, where address is map like %{"name" => "something", "street1" => "something" ...etc} returned map has easypost address id
   def add_shipping_address(user) do
     user =  create_address(user.address)
-    #result is %Easypost.User{key: "val", key: "val"}
+    #result is {:ok, %Easypost.User{key: "val", key: "val"}}
+    or
+    {:error, %Easypost.Error{code: "code", message: "message", errors: []}}
   end
 
   #get quotes for shipment when shipment is map like %{"from_address" => %{"name" => "something"}, "to_address" => %{"name" => "something"}, "parcel" => %{"width" => "something"}}
   def get_shipping_quotes(shipment) do
     shipment =  create_shipment(shipment)
-    #result is %Easypost.Shipment{key: "val", key: "val"}
+    #result is {:ok, %Easypost.Shipment{key: "val", key: "val"}}
+    or
+    {:error, %Easypost.Error{code: "code", message: "message", errors: []}}
   end
 
   #returns postage label with print url when rate is like: %{"id" => "id of chosen rate"}
   def ship_package(shipment_id, rate) do
     shipment =  buy_shipment(shipment_id, rate)
-    #result is %Easypost.Shipment{key: "val", key: "val"}
+    #result is {:ok, %Easypost.Shipment{key: "val", key: "val"}}
+    or
+    {:error, %Easypost.Error{code: "code", message: "message", errors: []}}
   end
 
   #create batch shipment when shipments is list like [%{"from_address" => %{"name" => "something"}, "to_address" => %{"name" => "something"}, "parcel" => %{"width" => "something"}}, %{"id" => "12346"}]
   def start_batch(shipments) do
     batch =  create_batch(shipments)
-    #result is %Easypost.Batch{key: "val", key: "val"}
+    #result is {:ok, %Easypost.Batch{key: "val", key: "val"}}
+    or
+    {:error, %Easypost.Error{code: "code", message: "message", errors: []}}
   end
 end
 

@@ -47,9 +47,9 @@ defmodule Easypost.Pickup do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
-        struct(Easypost.Pickup, pickup)
+        {:ok, struct(Easypost.Pickup, pickup)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -60,9 +60,9 @@ defmodule Easypost.Pickup do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups/" <> pickup_id <> "/buy"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
-        struct(Easypost.Pickup, pickup)
+        {:ok, struct(Easypost.Pickup, pickup)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -73,9 +73,9 @@ defmodule Easypost.Pickup do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/pickups/" <> pickup_id <> "/cancel"), conf[:key], [], ctype, body) do
       {:ok, pickup}->
-        struct(Easypost.Pickup, pickup)
+        {:ok, struct(Easypost.Pickup, pickup)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

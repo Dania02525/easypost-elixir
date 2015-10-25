@@ -35,9 +35,9 @@ defmodule Easypost.CustomsItem do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/customs_items"), conf[:key], [], ctype, body) do
       {:ok, item}->
-        struct(Easypost.CustomsItem, item)
+        {:ok, struct(Easypost.CustomsItem, item)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

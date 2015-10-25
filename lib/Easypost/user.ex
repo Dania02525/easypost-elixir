@@ -35,9 +35,9 @@ defmodule Easypost.User do
 
     case Requester.request(:get, Helpers.url(conf[:endpoint], "/api_keys"), conf[:key], [], ctype, body) do
       {:ok, result}->
-        result
+        {:ok, result}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -48,9 +48,9 @@ defmodule Easypost.User do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/carrier_accounts"), conf[:key], [], ctype, body) do
       {:ok, account}->
-        struct(Easypost.CarrierAccount, account)
+        {:ok, struct(Easypost.CarrierAccount, account)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -61,9 +61,9 @@ defmodule Easypost.User do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/users"), conf[:key], [], ctype, body) do
       {:ok, user}->
-        struct(Easypost.User, user)
+        {:ok, struct(Easypost.User, user)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

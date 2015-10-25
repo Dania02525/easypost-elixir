@@ -33,9 +33,9 @@ defmodule Easypost.Parcel do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/parcels"), conf[:key], [], ctype, body) do
       {:ok, parcel}->
-        struct(Easypost.Parcel, parcel)
+        {:ok, struct(Easypost.Parcel, parcel)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

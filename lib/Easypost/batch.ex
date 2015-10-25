@@ -32,10 +32,9 @@ defmodule Easypost.Batch do
     
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches"), conf[:key], [], ctype, body) do
       {:ok, batch}->
-
-        struct(Easypost.Batch, batch)
+        {:ok, struct(Easypost.Batch, batch)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -46,9 +45,9 @@ defmodule Easypost.Batch do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/create_and_buy"), conf[:key], [], ctype, body) do
       {:ok, batch}->
-        struct(Easypost.Batch, batch)
+        {:ok, struct(Easypost.Batch, batch)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -59,9 +58,9 @@ defmodule Easypost.Batch do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/label"), conf[:key], [], ctype, body) do
       {:ok, batch}->
-        struct(Easypost.Batch, batch)
+        {:ok, struct(Easypost.Batch, batch)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -72,9 +71,9 @@ defmodule Easypost.Batch do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/add_shipments"), conf[:key], [], ctype, body) do
       {:ok, batch}->
-        struct(Easypost.Batch, batch)
+        {:ok, struct(Easypost.Batch, batch)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -85,9 +84,9 @@ defmodule Easypost.Batch do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/batches/" <> batch_id <> "/remove_shipments"), conf[:key], [], ctype, body) do
       {:ok, batch}->
-        struct(Easypost.Batch, batch)
+        {:ok, struct(Easypost.Batch, batch)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

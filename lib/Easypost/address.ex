@@ -45,9 +45,9 @@ defmodule Easypost.Address do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/addresses"), conf[:key], [], ctype, body) do
       {:ok, address}->
-        struct(Easypost.Address, address)
+        {:ok, struct(Easypost.Address, address)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

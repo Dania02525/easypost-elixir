@@ -119,10 +119,9 @@ defmodule Easypost.Shipment do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
-
-        struct(Easypost.Shipment, shipment)
+        {:ok, struct(Easypost.Shipment, shipment)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -133,9 +132,9 @@ defmodule Easypost.Shipment do
 
     case Requester.request(:get, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/refund"), conf[:key], [], ctype, body) do
       {:ok, refund}->
-        struct(Easypost.Refund, refund)
+        {:ok, struct(Easypost.Refund, refund)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -146,9 +145,9 @@ defmodule Easypost.Shipment do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/insure"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
-        struct(Easypost.Shipment, shipment)
+        {:ok, struct(Easypost.Shipment, shipment)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
@@ -159,9 +158,9 @@ defmodule Easypost.Shipment do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/shipments/" <> shipment_id <> "/buy"), conf[:key], [], ctype, body) do
       {:ok, shipment}->
-        struct(Easypost.Shipment, shipment)
+        {:ok, struct(Easypost.Shipment, shipment)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 

@@ -41,9 +41,9 @@ defmodule Easypost.Tracker do
 
     case Requester.request(:post, Helpers.url(conf[:endpoint], "/trackers"), conf[:key], [], ctype, body) do
       {:ok, tracker}->
-        struct(Easypost.Tracker, tracker)
+        {:ok, struct(Easypost.Tracker, tracker)}
       {:error, _status, reason}->
-        struct(Easypost.Error, reason)
+        {:error, struct(Easypost.Error, reason)}
     end
   end
 
