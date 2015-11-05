@@ -29,9 +29,9 @@ defmodule Easypost.Requester do
       {:ok, {{_httpvs, 201, _status_phrase}, _headers, json_body}} ->
         {:ok, Poison.decode!(json_body) |> Easypost.Helpers.cast_keys}
       {:ok, {{_httpvs, status, _status_phrase}, json_body}} ->
-        {:error, status, Poison.decode!(json_body) |> Easypost.Helpers.cast_keys}
+        {:error, status, Poison.decode!(json_body)["error"] |> Easypost.Helpers.cast_keys}
       {:ok, {{_httpvs, status, _status_phrase}, _headers, json_body}} ->
-        {:error, status, Poison.decode!(json_body) |> Easypost.Helpers.cast_keys}
+        {:error, status, Poison.decode!(json_body)["error"] |> Easypost.Helpers.cast_keys}
       {:error, reason} -> 
         {:error, :bad_fetch, %{"code" => "bad fetch", "message" => reason} |> Easypost.Helpers.cast_keys}
     end
