@@ -1,0 +1,129 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Easypost.Client – easypost v0.0.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.11.1">
+    <link rel="stylesheet" href="dist/app-6bc9434c82.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        easypost
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">easypost v0.0.1</small>
+        Easypost.Client
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc" class="docstring">
+          <p>Access the Easypost API from Elixir using maps and returning structs</p>
+<p>##Usage:</p>
+<p>First, add test key to config/test.exs and config/dev.exs like this:</p>
+<pre><code class="elixir">config :myapp, easypost_endpoint: &quot;https://api.easypost.com/v2/&quot;,
+               easypost_key: &quot;your test key&quot;</code></pre>
+<p>Then, define endpoint and key in module where you will use client:</p>
+<pre><code class="elixir">defmodule Myapp.Mymodule do
+  use Easypost.Client, endpoint: Application.get_env(:my_app, :easypost_endpoint),                    
+                     key: Application.get_env(:my_app, :easypost_key)
+
+  #omitted...
+
+end</code></pre>
+<p>Now, the Easypost functions will be available in the module:</p>
+<pre><code class="elixir">#add an address by passing a binary key map (%{&quot;foo&quot; =&gt; &quot;bar&quot;})
+create_address(user.address)
+
+#gets a list of rate quotes
+create_shipment(shipment)
+
+#purchases a shipment using a particular rate where shipment_id is the Easypost id of the shipment and rate is a map containing the Easypost rate id
+buy_shipment(shipment_id, rate)
+
+#creates a batch of shipments using either a list of previously created shipping ids or shipment maps
+create_batch(shipments)</code></pre>
+<p>All functions return either {:ok, (struct)} or {:error, %Easypost.Error{}}, so you should pattern match the result of the functions.
+For more examples, see tests.  </p>
+
+        </section>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.1),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+    </footer>
+  </div>
+</section>
+</div>
+  <script src="dist/app-c7aad77d7d.js"></script>
+  </body>
+</html>
+

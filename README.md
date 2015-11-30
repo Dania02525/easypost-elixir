@@ -57,7 +57,7 @@ Please visit easypost api documentation to see requred fields for each request a
 
 ```elixir
 def deps do
-  [ {:easypost, git: "https://github.com/Dania02525/easypost-elixir.git"}]
+  [{:easypost, "~> 0.0.1"}]
 end
 ```
 

@@ -7,7 +7,8 @@ defmodule Easypost.Mixfile do
     elixir: "~> 1.0.0 or ~> 1.1",
     deps: deps,
     package: [
-      contributors: ["Dania Simmons"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Dania Simmons"],
       licenses: ["MIT"],
       links: %{github: "https://github.com/Dania02525/easypost"}
     ],
@@ -26,7 +27,9 @@ defmodule Easypost.Mixfile do
 
   defp deps do
     [
-    {:poison, "~> 1.5.0"}
+    {:poison, "~> 1.5.0"},
+    {:ex_doc, "~> 0.10", only: :dev},
+    {:earmark, ">= 0.0.0"}
     ]
   end
 end
