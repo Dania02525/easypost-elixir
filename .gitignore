@@ -5,3 +5,6 @@
 
 #configs
 /config/*.exs
+
+#docs
+/doc/*
