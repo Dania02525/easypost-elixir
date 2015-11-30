@@ -2,16 +2,21 @@ defmodule Easypost.Requester do
 
   def request(method, url, key, headers, ctype, body) do
     url = String.to_char_list(url)
-    case method do
+    fetch = case method do
       :get ->
         headers = headers ++ [auth_header(key)]
-        :httpc.request(:get, {url, headers}, [], [])
+        Task.async(fn-> :httpc.request(:get, {url, headers}, [], []) end)
       _ ->
         headers = headers ++ [auth_header(key), {'Content-Type', ctype}]
-        :httpc.request(method, {url, headers, ctype, body}, [], body_format: :binary)
+        Task.async(fn-> :httpc.request(method, {url, headers, ctype, body}, [], body_format: :binary) end)
     end 
-    |> parse_response
 
+    try do
+      Task.await(fetch, 10000)
+      |> parse_response
+    catch :exit,
+      _-> {:error, "UNAVAILABLE", %{code: "UNAVAILABLE", message: "The service is currently unavaible.  Please try again later."}}
+    end
   end
 
   defp auth_header(key) do

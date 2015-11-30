@@ -1,6 +1,6 @@
 defmodule EasypostTest do
   use ExUnit.Case, async: false
-  use Easypost.Client, endpoint: Application.get_env(:myapp, :easypost_endpoint), key: Application.get_env(:myapp, :easypost_test_key)
+  use Easypost.Client, endpoint: Application.get_env(:easypost, :easypost_endpoint), key: Application.get_env(:easypost, :easypost_test_key)
 
   ExUnit.configure exclude: [production_only: true]
 
@@ -30,6 +30,7 @@ defmodule EasypostTest do
   test "adding some invalid address" do
     {_, result} = create_address(%{})
     assert result.__struct__ == Easypost.Error
+    assert result.code == "ADDRESS.PARAMETERS.INVALID"
   end
 
   test "adding a parcel" do
@@ -200,6 +201,15 @@ defmodule EasypostTest do
     assert result.__struct__ == Easypost.Batch
 
     assert result.num_shipments == 2
+  end
+
+  test "timeout results in service unavailable error" do
+    {_, result} = Easypost.Shipment.create_shipment(
+      %{endpoint: "http://10.255.255.1", key: Application.get_env(:easypost, :easypost_test_key)}, 
+      %{"from_address" => @validaddress1, "to_address" => @validaddress2, "parcel" => @validparcel, "customs_info" => @validcustomsinfo}
+      )
+    assert result.__struct__ == Easypost.Error
+    assert result.code == "UNAVAILABLE"
   end
 
   @tag :production_only
