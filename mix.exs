@@ -27,7 +27,7 @@ defmodule Easypost.Mixfile do
 
   defp deps do
     [
-    {:poison, "~> 1.5.0"},
+    {:poison, ">= 1.5.0"},
     {:ex_doc, "~> 0.10", only: :dev},
     {:earmark, ">= 0.0.0"}
     ]
