@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Dania02525/easypost-elixir.svg?style=shield)](https://circleci.com/gh/Dania02525/easypost-elixir)
+
 # Elixir Easypost Client
 
 
@@ -65,5 +67,4 @@ end
 
 * Some tests are disabled and can only be used in production mode.  You may remove the the exlusion in the unit test and use your production API, but remember this will create shipments you probably don't want!
 
-* The "insure shipment" test occasionally fails with the code SHIPMENT.POSTAGE.REQUIRED. I think this has to do with the timing of the requests in the test suite. 
-
+* The "insure shipment" test occasionally fails with the code SHIPMENT.POSTAGE.REQUIRED. I think this has to do with the timing of the requests in the test suite.
