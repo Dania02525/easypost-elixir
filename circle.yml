@@ -8,4 +8,4 @@ dependencies:
 test:
   override:
     - MIX_ENV=test mix compile
-    - mix test
+    - mix test --exclude [production_only: true]
