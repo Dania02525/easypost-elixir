@@ -1,4 +1,4 @@
-defmodule Easypost.Shipment do 
+defmodule Easypost.Shipment do
   alias Easypost.Helpers
   alias Easypost.Requester
 

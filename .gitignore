@@ -3,8 +3,5 @@
 /deps
 /*.ez
 
-#configs
-/config/*.exs
-
 #docs
 /doc/*
